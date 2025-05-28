@@ -2,13 +2,69 @@ from pathlib import Path
 import numpy as np
 import torch
 from torch.utils.data.sampler import SubsetRandomSampler
-
+import os
+from torchvision.datasets import ImageFolder
+from torchvision import transforms
+from torch.utils.data import DataLoader
 from confidnet.augmentations import get_composed_augmentations
 from confidnet.utils.logger import get_logger
 
 LOGGER = get_logger(__name__, level="DEBUG")
 
+class CustomImageFolderLoader:
+    def __init__(self, config_args):
+        self.config_args = config_args
+        self.train_dataset = None
+        self.test_dataset = None
+        self.val_dataset = None
+        self.train_loader = None
+        self.test_loader = None
+        self.val_loader = None  # optional, could just alias test_loader if not available
+        self.load_dataset()
 
+    def load_dataset(self):
+        data_root = self.config_args["data"]["data_dir"]
+        batch_size = self.config_args["training"]["batch_size"]
+
+        transform = transforms.Compose([
+            transforms.Grayscale(num_output_channels=1),
+            transforms.Resize((28, 28)),
+            transforms.ToTensor(),
+        ])
+
+        train_path = os.path.join(data_root, "train")
+        test_path = os.path.join(data_root, "test")
+
+        self.train_dataset = ImageFolder(root=train_path, transform=transform)
+        self.test_dataset = ImageFolder(root=test_path, transform=transform)
+
+        # Use test dataset as validation too if there's no separate val dir
+        self.val_dataset = self.test_dataset
+
+        self.train_loader = DataLoader(
+            self.train_dataset,
+            batch_size=batch_size,
+            shuffle=True,
+            num_workers=2,
+        )
+
+        self.test_loader = DataLoader(
+            self.test_dataset,
+            batch_size=batch_size,
+            shuffle=False,
+            num_workers=2,
+        )
+
+        self.val_loader = DataLoader(
+            self.val_dataset,
+            batch_size=batch_size,
+            shuffle=False,
+            num_workers=2,
+        )
+
+    def make_loaders(self):
+        # Already initialized in `load_dataset`, but required for compatibility
+        pass
 class AbstractDataLoader:    
     def __init__(self, config_args):
         self.output_folder = config_args['training']['output_folder']

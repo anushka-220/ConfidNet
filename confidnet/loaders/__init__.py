@@ -1,4 +1,5 @@
 from confidnet.loaders import usualtorch_loader as dload
+from confidnet.loaders.loader import CustomImageFolderLoader
 
 
 def get_loader(config_args):
@@ -10,7 +11,7 @@ def get_loader(config_args):
     data_loader_factory = {
         "cifar10": dload.CIFAR10Loader,
         "cifar100": dload.CIFAR100Loader,
-        "mnist": dload.MNISTLoader,
+        "mnist": CustomImageFolderLoader,
         "svhn": dload.SVHNLoader,
         "camvid": dload.CamVidLoader,
     }

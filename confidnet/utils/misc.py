@@ -54,3 +54,9 @@ def load_yaml(path):
     if config_args["model"]["resume"] not in [None, "vgg16"]:
         config_args["model"]["resume"] = Path(config_args["model"]["resume"])
     return config_args
+
+def enable_dropout(model):
+    """ Function to enable the dropout layers during test-time """
+    for m in model.modules():
+        if isinstance(m, torch.nn.Dropout):
+            m.train()

@@ -79,6 +79,13 @@ class AbstractLeaner:
         else:
             raise Exception(f"Loss {self.loss_args['name']} not implemented")
         LOGGER.info(f"Using loss {self.loss_args['name']}")
+    def enable_mc_dropout(self):
+        """
+        Force dropout layers to remain active during evaluation.
+        """
+        for m in self.model.modules():
+            if isinstance(m, torch.nn.Dropout) or isinstance(m, torch.nn.Dropout2d):
+                m.train()
 
     def set_optimizer(self, optimizer_name):
         optimizer_params = {

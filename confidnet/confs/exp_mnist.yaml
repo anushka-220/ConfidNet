@@ -1,7 +1,7 @@
 # Data parameters
 data:
     dataset: mnist
-    data_dir: data/mnist-data
+    data_dir: /Users/anushka/Documents/Summer-Project-/processed_mnist
     input_size: [28,28]
     input_channels: 1
     num_classes: 10
@@ -9,7 +9,7 @@ data:
 
 # Training parameters
 training:
-    output_folder: /share/DEEPLEARNING/ccorbiere/logs/cifar10/test/cifar10_trustscore_baseline_pretrained
+    output_folder: /Users/anushka/Documents/Summer-Project-/output_file
     task: classification
     learner: default
     nb_epochs: 100

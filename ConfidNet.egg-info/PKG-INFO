@@ -1,0 +1,18 @@
+Metadata-Version: 2.4
+Name: ConfidNet
+Version: 0.1.0
+Home-page: https://github.com/valeoai/ConfidNet
+Author: Charles Corbiere
+License-File: LICENSE
+Requires-Dist: pyyaml
+Requires-Dist: coloredlogs
+Requires-Dist: torchsummary
+Requires-Dist: verboselogs
+Requires-Dist: setuptools
+Requires-Dist: tqdm
+Requires-Dist: click
+Requires-Dist: scikit-learn
+Dynamic: author
+Dynamic: home-page
+Dynamic: license-file
+Dynamic: requires-dist

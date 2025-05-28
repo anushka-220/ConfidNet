@@ -4,17 +4,23 @@ from torchvision import datasets
 from confidnet.augmentations import get_composed_augmentations
 from confidnet.loaders.camvid_dataset import CamvidDataset
 from confidnet.loaders.loader import AbstractDataLoader
-
+import os
+from pathlib import Path
+from torchvision.datasets import ImageFolder
+from torchvision import transforms
 
 class MNISTLoader(AbstractDataLoader):
     def load_dataset(self):
-        self.train_dataset = datasets.MNIST(
-            root=self.data_dir, train=True, download=True, transform=self.augmentations_train
-        )
-        self.test_dataset = datasets.MNIST(
-            root=self.data_dir, train=False, download=True, transform=self.augmentations_test
-        )
+        data_root = self.config_args["data"]["data_root"]
 
+        transform = transforms.Compose([
+            transforms.Grayscale(num_output_channels=1),  # Ensure 1 channel like MNIST
+            transforms.Resize((28, 28)),                  # Resize to 28x28 if needed
+            transforms.ToTensor(),
+        ])
+
+        self.train_dataset = ImageFolder(root=os.path.join(data_root, "train"), transform=transform)
+        self.test_dataset = ImageFolder(root=os.path.join(data_root, "test"), transform=transform)
 
 class SVHNLoader(AbstractDataLoader):
     def load_dataset(self):

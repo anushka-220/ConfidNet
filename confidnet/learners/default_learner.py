@@ -119,7 +119,7 @@ class DefaultLearner(AbstractLeaner):
 
         # Special case of mc-dropout
         if mode == "mc_dropout":
-            self.model.keep_dropout_in_test()
+            self.enable_mc_dropout()
             LOGGER.info(f"Sampling {samples} times")
 
         # Evaluation loop
@@ -173,7 +173,8 @@ class DefaultLearner(AbstractLeaner):
                     elif self.task == "segmentation":
                         loss += self.criterion(output, target.squeeze(dim=1))
                     probs = F.softmax(output, dim=1)
-                    confidence = (probs * torch.log(probs + 1e-9)).sum(dim=1)  # entropy
+                    confidence = -(probs * torch.log(probs + 1e-9)).sum(dim=1, keepdim=True)
+
                     pred = probs.max(dim=1, keepdim=True)[1]
 
                 metrics.update(pred, target, confidence)

@@ -1,4 +1,4 @@
-import structured_map_ranking_loss
+from confidnet.utils.structured_map_ranking_loss import StructuredMAPLoss as structured_map_ranking_loss
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
